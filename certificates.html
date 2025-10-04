@@ -1,168 +1,129 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>Certificates</title>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-	<style>
-		:root{--line:#e5e7eb;--muted:#6b7280;--paper:#ffffff;--accent:#111827}
-		body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;background:#f6f7f9;color:var(--accent);padding:28px}
-		.container{max-width:1100px;margin:0 auto}
-		h1{margin:0 0 12px 0}
-		.actions{margin-bottom:12px}
-		.gallery{display:flex;flex-wrap:wrap;gap:12px}
-		.slot, .thumb{width:220px;height:150px;background:#fff;border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
-		.thumb img, .slot img{max-width:100%;max-height:100%;display:block}
-		.placeholder{color:var(--muted);font-size:14px;padding:8px;text-align:center}
-		.slot{position:relative}
-		.remove-btn{position:absolute;right:6px;top:6px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:4px 6px;cursor:pointer;display:none;font-size:12px}
-		.slot.has-image .remove-btn{display:block}
-		.empty{color:var(--muted);padding:24px;text-align:center}
-		.fullscreen{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:999}
-		.fullscreen img{max-width:95%;max-height:95%}
-		.close-btn{position:fixed;right:18px;top:18px;background:#fff;border-radius:50%;border:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-	</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Certificates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#f6f7f9;--card:#fff;--muted:#6b7280;--accent:#111827;--line:#e5e7eb}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;background:var(--bg);color:var(--accent);padding:28px}
+    .wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start}
+    header{grid-column:1/-1;margin-bottom:10px}
+    h1{margin:0;font-size:28px}
+
+    /* Left nav */
+    .nav{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px}
+    .nav h3{font-size:14px;margin:0 0 8px 0;color:var(--muted)}
+    .list{display:flex;flex-direction:column;gap:8px}
+    .item{background:transparent;border:0;text-align:left;padding:10px 12px;border-radius:6px;cursor:pointer;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:10px}
+    .item:hover{background:#f3f4f6}
+    .item.active{background:#111827;color:white}
+    .item .dot{width:10px;height:10px;border-radius:50%;background:var(--line);flex:0 0 10px}
+    .item.active .dot{background:#fff}
+
+    /* Viewer */
+    .viewer{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;min-height:320px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center}
+    .viewer .meta{width:100%;display:flex;justify-content:space-between;align-items:center}
+    .viewer .meta .title{font-weight:700}
+    .viewer .photo{width:100%;max-width:760px;max-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:6px;background:#fafafa;border:1px solid var(--line)}
+    .photo img{max-width:100%;max-height:100%;display:block}
+    .placeholder{color:var(--muted);padding:24px;text-align:center}
+
+    /* fullscreen */
+    .fs{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:999}
+    .fs img{max-width:96%;max-height:96%}
+    .fs .close{position:fixed;right:18px;top:18px;background:#fff;border-radius:50%;border:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+
+    /* responsive */
+    @media (max-width:880px){.wrap{grid-template-columns:1fr;}.nav{order:2}.viewer{order:1}}
+  </style>
 </head>
 <body>
-	<div class="container">
-		<h1>Certificates</h1>
-		<div class="actions">
-			<a href="index.html">Back to Resume</a>
-			<button id="save-disk">Save to disk</button>
-		</div>
-		<div id="gallery" class="gallery" aria-live="polite">
-			<div class="slot" data-index="0"><div class="placeholder">Add image 1</div></div>
-			<div class="slot" data-index="1"><div class="placeholder">Add image 2</div></div>
-			<div class="slot" data-index="2"><div class="placeholder">Add image 3</div></div>
-			<div class="slot" data-index="3"><div class="placeholder">Add image 4</div></div>
-			<div class="slot" data-index="4"><div class="placeholder">Add image 5</div></div>
-		</div>
-	</div>
+  <div class="wrap">
+    <header>
+      <h1>Certificates</h1>
+    </header>
 
-	<div class="fullscreen" id="fs">
-		<button class="close-btn" id="fs-close">✕</button>
-		<img id="fs-img" src="" alt="" />
-	</div>
+    <nav class="nav" aria-label="Certificates list">
+      <h3>Click a certificate to view</h3>
+      <div class="list" id="list">
+        <!-- items injected by JS -->
+      </div>
+    </nav>
 
-	<script>
-	// Attempt to load certificate list from img/list.json first, otherwise try likely filenames.
-	(async function(){
-		const gallery = document.getElementById('gallery');
-		const empty = document.getElementById('empty');
-		// single hidden file input used for all 5 slots
-		const fileInput = document.createElement('input');
-		fileInput.type = 'file';
-		fileInput.accept = 'image/*';
-		fileInput.style.display = 'none';
-		document.body.appendChild(fileInput);
+    <main class="viewer" id="viewer">
+      <div class="meta"><div class="title" id="title">Select a certificate</div><div><a href="index.html">Back to Resume</a></div></div>
+      <div class="photo" id="photo"><div class="placeholder">No certificate selected</div></div>
+      <div style="width:100%;display:flex;justify-content:center;gap:10px"><button id="download" style="display:none">Download</button><button id="openFull" style="display:none">Open Fullscreen</button></div>
+    </main>
+  </div>
 
-		const slots = Array.from(document.querySelectorAll('.slot'));
-		const fs = document.getElementById('fs');
-		const fsImg = document.getElementById('fs-img');
-		const fsClose = document.getElementById('fs-close');
+  <div class="fs" id="fs"><button class="close" id="fsClose">✕</button><img id="fsImg" src="" alt=""/></div>
 
-		function addThumb(src){
-			const div = document.createElement('div');
-			div.className='thumb';
-			const img = new Image();
-			img.src = src;
-			img.alt='Certificate';
-			img.onload = function(){ div.appendChild(img); gallery.appendChild(div); empty.style.display='none'; };
-			img.onerror = function(){ /* skip */ };
-			div.addEventListener('click', ()=>{ fsImg.src = src; fs.style.display='flex'; });
-		}
+  <script>
+    (async function(){
+      const listEl = document.getElementById('list');
+      const titleEl = document.getElementById('title');
+      const photoEl = document.getElementById('photo');
+      const downloadBtn = document.getElementById('download');
+      const openFullBtn = document.getElementById('openFull');
+      const fs = document.getElementById('fs');
+      const fsImg = document.getElementById('fsImg');
+      const fsClose = document.getElementById('fsClose');
 
-		// Click a slot to choose an image for that slot
-		slots.forEach(slot => {
-			slot.addEventListener('click', ()=>{
-				const idx = slot.getAttribute('data-index');
-				fileInput.dataset.index = idx;
-				fileInput.click();
-			});
-		});
+      // Filenames (embedded so the page works when opened locally)
+      const names = [
+        '625_1753026116_certificate.png',
+        'IOT (2).png',
+        'WhatsApp Image 2025-10-04 at 16.01.43_31c2b797.jpg',
+        'WhatsApp Image 2025-10-04 at 16.02.20_1fd3b81d.jpg',
+        'WhatsApp Image 2025-10-04 at 16.03.43_236e67c3.jpg'
+      ];
 
+      // Build list UI
+      names.forEach((fname, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'item';
+        btn.innerHTML = `<span class="dot"></span>Certificate - ${idx+1}`;
+        btn.addEventListener('click', ()=> showCert(idx));
+        listEl.appendChild(btn);
+      });
 
-		fileInput.addEventListener('change', function(e){
-			const f = e.target.files && e.target.files[0];
-			if(!f) return;
-			if(!f.type.startsWith('image/')) return;
-			const idx = parseInt(fileInput.dataset.index,10);
-			// read file and compress/save as data URL
-			const reader = new FileReader();
-			reader.onload = function(ev){
-				const img = new Image();
-				img.src = ev.target.result;
-				img.onload = function(){
-					// draw to canvas to limit size (max 1200px)
-					const max = 1200;
-					let w = img.width, h = img.height;
-					if(w>max || h>max){
-						const ratio = Math.min(max/w, max/h);
-						w = Math.round(w*ratio); h = Math.round(h*ratio);
-					}
-					const c = document.createElement('canvas'); c.width = w; c.height = h;
-					const ctx = c.getContext('2d'); ctx.drawImage(img,0,0,w,h);
-					const dataUrl = c.toDataURL('image/jpeg', 0.85);
-					// save to localStorage
-					try{ localStorage.setItem('cert-slot-'+idx, dataUrl); }catch(err){ console.warn('Storage failed',err); }
-					renderSlot(idx, dataUrl);
-				};
-			};
-			reader.readAsDataURL(f);
-		});
+      // show certificate by index
+      function showCert(i){
+        const filename = names[i];
+        titleEl.textContent = `Certificate - ${i+1}`;
+        // highlight active
+        Array.from(listEl.children).forEach((c,idx)=> c.classList.toggle('active', idx===i));
+        // build src
+        const src = 'img/' + filename;
+        // try to load image
+        const img = new Image();
+        img.src = src;
+        img.alt = `Certificate ${i+1}`;
+        img.onload = ()=>{
+          photoEl.innerHTML = '';
+          photoEl.appendChild(img);
+          downloadBtn.style.display = 'inline-block';
+          openFullBtn.style.display = 'inline-block';
+          downloadBtn.onclick = ()=>{ const a = document.createElement('a'); a.href = src; a.download = filename; a.click(); };
+          openFullBtn.onclick = ()=>{ fsImg.src = src; fs.style.display = 'flex'; };
+        };
+        img.onerror = ()=>{
+          photoEl.innerHTML = `<div class=\"placeholder\">Image not found: ${filename}</div>`;
+          downloadBtn.style.display = 'none'; openFullBtn.style.display = 'none';
+        };
+      }
 
-		function renderSlot(idx, src){
-			const slot = slots[idx];
-			slot.innerHTML = '';
-			const img = new Image(); img.src = src; img.alt = 'Certificate '+(idx+1);
-			img.onload = function(){ img.style.maxWidth='100%'; img.style.maxHeight='100%'; slot.appendChild(img); slot.classList.add('has-image'); };
-			// add remove button
-			const btn = document.createElement('button'); btn.className='remove-btn'; btn.textContent='Remove';
-			btn.addEventListener('click', function(ev){ ev.stopPropagation(); localStorage.removeItem('cert-slot-'+idx); slot.innerHTML = '<div class="placeholder">Add image '+(idx+1)+'</div>'; slot.classList.remove('has-image'); });
-			slot.appendChild(btn);
-			// click to view fullscreen
-			slot.addEventListener('click', ()=>{ fsImg.src = src; fs.style.display='flex'; });
-		}
+      // Fullscreen handlers
+      fsClose.addEventListener('click', ()=>{ fs.style.display='none'; fsImg.src=''; });
+      fs.addEventListener('click', (e)=>{ if(e.target===fs) { fs.style.display='none'; fsImg.src=''; } });
 
-		// restore saved slots
-		slots.forEach((slot, i)=>{
-			const key = 'cert-slot-'+i;
-			const data = localStorage.getItem(key);
-			if(data){ renderSlot(i, data); }
-		});
-
-		// Save to disk button posts images to a local server
-		const saveBtn = document.getElementById('save-disk');
-		saveBtn.addEventListener('click', async ()=>{
-			const form = new FormData();
-			let any = false;
-			for(let i=0;i<slots.length;i++){
-				const data = localStorage.getItem('cert-slot-'+i);
-				if(!data) continue;
-				any = true;
-				// convert dataURL to File
-				const res = await fetch(data);
-				const blob = await res.blob();
-				const filename = `cert-${i+1}.jpg`;
-				form.append('files', blob, filename);
-			}
-			if(!any){ alert('No images to save. Add images to slots first.'); return; }
-			try{
-				const resp = await fetch('http://localhost:3000/upload', { method:'POST', body: form });
-				if(!resp.ok) throw new Error(await resp.text());
-				const j = await resp.json();
-				alert('Saved to disk: ' + (j.saved || []).join(', '));
-			}catch(err){
-				alert('Save failed. Make sure the local server is running (node save_uploads_server.js).\n' + err);
-			}
-		});
-
-		// fullscreen close
-		fsClose.addEventListener('click', ()=>{ fs.style.display='none'; fsImg.src=''; });
-		fs.addEventListener('click', (e)=>{ if(e.target===fs) { fs.style.display='none'; fsImg.src=''; } });
-
-	})();
-	</script>
+      // Auto-select first if present
+      if(names && names.length) showCert(0);
+    })();
+  </script>
 </body>
 </html>
