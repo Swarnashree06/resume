@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Swarnashree — Resume</title>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+		<style>
+			:root{
+				--accent:#111827; /* dark */
+				--muted:#6b7280;
+				--line:#e5e7eb;
+				--left-bg:#f7f7f9;
+				--paper:#ffffff;
+				--max-width:900px;
+			}
+			*{box-sizing:border-box}
+			html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color:var(--accent);}
+			body{background:#f2f4f7;padding:32px;display:flex;align-items:center;justify-content:center}
+			/* thin page frame border */
+			.page-frame{position:fixed;inset:20px;border:6px solid #e6e7ea;background:transparent;pointer-events:none;box-shadow:0 0 0 1px rgba(0,0,0,0.02) inset}
+			.resume{background:var(--paper);max-width:var(--max-width);width:100%;box-shadow:0 6px 18px rgba(16,24,40,0.08);border:1px solid var(--line);display:grid;grid-template-columns:280px 1fr;min-height:1120px;position:relative;z-index:2}
+			/* Header band across the top inside right column */
+			.left{background:var(--left-bg);padding:28px 22px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:18px}
+			.right{padding:28px 32px}
+
+			/* Name block */
+			.name{font-size:40px;font-weight:800;letter-spacing:0.6px;margin:0}
+			.title{font-size:14px;font-weight:700;color:var(--muted);margin-top:6px}
+
+			/* Contact */
+			.contact{display:flex;flex-direction:column;gap:8px;margin-left:auto;align-items:flex-end}
+			.contact-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+			.contact-item svg{width:16px;height:16px;flex:0 0 16px;color:var(--muted)}
+			/* stacked right-aligned contact list (icons in circular badges) */
+			.contact-list{display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+			.contact-phone{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:var(--accent)}
+			.contact-item .icon{width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#f5f6f8;color:var(--muted);flex:0 0 28px}
+			.contact-item .icon svg{width:14px;height:14px}
+			.contact-item span{display:block;max-width:260px;text-align:right}
+
+			header{display:flex;align-items:flex-start;gap:20px;padding:18px 28px;border-bottom:1px solid var(--line)}
+			.header-left{flex:1}
+			.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:300px}
+			.contact-title{font-weight:700;color:var(--muted);font-size:13px;margin-bottom:6px}
+			.contact-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+			.contact-row.phone{font-size:15px;font-weight:600;color:var(--accent)}
+			.contact-row svg{width:16px;height:16px;flex:0 0 16px;color:var(--muted)}
+			.contact-row.small{display:flex;flex-direction:row;gap:18px}
+			.contact-row.small > div{display:flex;align-items:center;gap:8px}
+			.contact-row.small svg{width:14px;height:14px}
+
+			/* Sections */
+			h3{font-size:13px;margin:0 0 8px 0;color:var(--accent);font-weight:700}
+			p,li{font-size:13px;color:#111827;line-height:1.38;margin:0}
+			.muted{color:var(--muted)}
+			.section{margin-bottom:18px}
+			.skills-list{display:flex;flex-direction:column;gap:6px}
+			.bullet{display:flex;gap:8px}
+			ul{margin:8px 0 0 18px;padding:0}
+
+			.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+			.divider{height:100%;width:1px;background:var(--line);position:absolute;left:280px;top:0}
+
+			/* Achievements, internship, projects lists */
+			.achievements li, .internship li, .projects li{margin-bottom:8px}
+
+			.cert-link{display:inline-block;margin:10px 0 14px 0;color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline}
+
+
+			/* Footer line */
+			.note{font-size:12px;color:var(--muted)}
+
+			/* Print styles */
+			@media print{
+				body{padding:0}
+				.resume{box-shadow:none;border:0;max-width:100%;min-height:auto}
+				.left{padding:20px}
+				.right{padding:20px}
+				.name{font-size:34px}
+			}
+
+			/* Responsive */
+			@media (max-width:880px){
+				.resume{grid-template-columns:1fr;padding:0;min-height:unset}
+				.left{order:2;border-right:0;border-top:1px solid var(--line)}
+				.right{order:1}
+				.divider{display:none}
+			}
+		</style>
+	</head>
+		<body>
+			<div class="page-frame" aria-hidden="true"></div>
+			<main class="resume" role="document">
+			<div class="left" aria-label="sidebar">
+				<div>
+					<h1 class="name">SWARNASHREE</h1>
+					<div class="title">FRESHER</div>
+				</div>
+
+				<section class="section">
+					<h3>ABOUT ME</h3>
+					<p class="muted" style="margin-top:8px;">Motivated MCA graduating student with a strong foundation in computer science, software development, and database management. Skilled in Java, Python, C++, and SQL, with hands-on experience in building ERP systems, IoT-based projects, and cross-platform applications. Passionate about applying analytical and problem-solving skills to develop innovative IT solutions.</p>
+				</section>
+
+				<section class="section">
+					<h3>SKILLS</h3>
+					<div style="margin-top:8px;">
+						<strong class="muted">Programming Languages &amp; Concepts</strong>
+						<ul style="margin-top:6px">
+							<li>Java, Python, C</li>
+							<li>C++</li>
+							<li>SQL</li>
+						</ul>
+						<strong class="muted" style="display:block;margin-top:8px">Web &amp; Application</strong>
+						<p class="muted" style="margin-top:6px">HTML, CSS, JavaScript for frontend basics</p>
+						<strong class="muted" style="display:block;margin-top:8px">Other Skills</strong>
+						<ul style="margin-top:6px">
+							<li>Team collaboration and project management</li>
+							<li>Good communication and documentation skills</li>
+						</ul>
+					</div>
+				</section>
+
+				<section class="section">
+					<h3>PROGRAMMING LANGUAGES KNOWN</h3>
+					<ul style="margin-top:8px">
+						<li>Java</li>
+						<li>Python</li>
+						<li>C &amp; C++</li>
+						<li>SQL</li>
+						<li>HTML and CSS</li>
+					</ul>
+				</section>
+
+				<section class="section">
+					<h3>EDUCATION</h3>
+					<div style="margin-top:8px;font-size:13px;color:var(--muted)">
+						<strong>Masters of computer science and application</strong>
+						<div>Canara college, mangalore (2025)</div>
+						<div style="margin-top:6px"><strong>Bachelor of Science (BSC) in Physics, mathematics, computer science.</strong></div>
+						<div>Canara college , mangalore (2023)</div>
+						<div style="margin-top:6px">Besent pre university college =&gt; Science (PCMC) - 2020</div>
+						<div>Besent high school (SSLC) - 2018</div>
+					</div>
+				</section>
+
+			</div>
+
+					<div class="right" aria-label="main">
+						<header>
+							<div class="header-left">
+								<!-- intentionally empty: name is in the left column -->
+							</div>
+			<div class="header-right">
+				<div class="contact">
+					<div class="contact-title">Contact</div>
+					<div class="contact-phone">
+						<div class="icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+								<path d="M2 3c0 0 4 1 6 6s-6 6-6 6c3 5 11 5 14 2 3-3 1-11 1-11" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</div>
+						<span>9448108027</span>
+					</div>
+					<div class="contact-list">
+						<div class="contact-item">
+							<div class="icon">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+									<path d="M4 4h16v12H4z" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+									<path d="M22 6l-10 7L2 6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</div>
+							<span>swarnacharya14@gmail.com</span>
+						</div>
+						<div class="contact-item">
+							<div class="icon">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+									<path d="M3 12h18" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</div>
+							<span>www.reallygreatsite.com</span>
+						</div>
+						<div class="contact-item">
+							<div class="icon">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+									<path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0z" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</div>
+							<span>Swarnachandra, jb lobo road, Kottara chowki, Mangalore</span>
+						</div>
+					</div>
+				</div>
+			</div>
+						</header>
+
+				<section class="section">
+					<h3>ACHIEVEMENTS</h3>
+					<ul class="achievements" style="margin-top:8px">
+						<li>Awarded certificate of merit for academic excellence in first year MCA - 2nd rank.</li>
+						<li>Certified in "Python for data science" (NPTEL, 2024)</li>
+						<li>Presented seminar on "Technical session on IOT"</li>
+						<li>Completed "IOT- smart irrigation system" Project as part of MCA coursework.</li>
+						<li>Attended UGC-NET (Computer Science &amp; Applications) and scored 52.847% (2025).</li>
+						<li>Achieved 5 Online Course Certifications in emerging IT domains: Microsoft Power BI, Discover data analysis, AI agents, Introduction to IOT, Intro to generative AI.</li>
+					</ul>
+					<div>
+						<a class="cert-link" href="certificates.html" target="_blank" rel="noopener">Certificates</a>
+					</div>
+				</section>
+
+				<section class="section">
+					<h3>INTERNSHIP</h3>
+					<div class="internship" style="margin-top:8px">
+						<strong>Software Engineer Intern – Ukshati Technologies</strong>
+						<div class="muted" style="margin-top:6px">17th June 2025 – 30th September 2025</div>
+						<ul style="margin-top:8px">
+							<li>Worked on the development and enhancement of ERP System modules.</li>
+							<li>Designed and implemented automated test cases using Selenium WebDriver.</li>
+							<li>Analyzed system workflows and contributed to improving efficiency of ERP processes.</li>
+							<li>Prepared test documentation and reports to track test results and ensure software quality.</li>
+						</ul>
+					</div>
+				</section>
+
+				<section class="section">
+					<h3>About projects</h3>
+					<div class="projects" style="margin-top:8px">
+						<strong>Soil moisture monitoring system (2024)</strong>
+						<ul style="margin-top:8px">
+							<li>Developed an IoT-based soil moisture monitoring system using Arduino Uno.</li>
+							<li>Integrated soil moisture sensor to measure real-time water content in soil.</li>
+							<li>Displayed sensor readings on a serial monitor output.</li>
+							<li>Implemented an automatic water pump mechanism to monitor soil moisture if it falls below the required level.</li>
+							<li>Demonstrated application of embedded C programming, sensor interfacing, and microcontroller-based system design.</li>
+						</ul>
+					</div>
+				</section>
+
+				<div style="height:18px;border-top:1px solid var(--line);margin-top:18px;padding-top:12px">
+					<div class="note">This resume is styled for screen and print. Use browser Print → Save as PDF to create a PDF version.</div>
+				</div>
+			</div>
+
+			<div class="divider" aria-hidden="true"></div>
+		</main>
+
+	</body>
+</html>

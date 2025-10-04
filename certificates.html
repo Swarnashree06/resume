@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Certificates</title>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+	<style>
+		:root{--line:#e5e7eb;--muted:#6b7280;--paper:#ffffff;--accent:#111827}
+		body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;margin:0;background:#f6f7f9;color:var(--accent);padding:28px}
+		.container{max-width:1100px;margin:0 auto}
+		h1{margin:0 0 12px 0}
+		.actions{margin-bottom:12px}
+		.gallery{display:flex;flex-wrap:wrap;gap:12px}
+		.slot, .thumb{width:220px;height:150px;background:#fff;border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
+		.thumb img, .slot img{max-width:100%;max-height:100%;display:block}
+		.placeholder{color:var(--muted);font-size:14px;padding:8px;text-align:center}
+		.slot{position:relative}
+		.remove-btn{position:absolute;right:6px;top:6px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:4px 6px;cursor:pointer;display:none;font-size:12px}
+		.slot.has-image .remove-btn{display:block}
+		.empty{color:var(--muted);padding:24px;text-align:center}
+		.fullscreen{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:999}
+		.fullscreen img{max-width:95%;max-height:95%}
+		.close-btn{position:fixed;right:18px;top:18px;background:#fff;border-radius:50%;border:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Certificates</h1>
+		<div class="actions">
+			<a href="index.html">Back to Resume</a>
+			<button id="save-disk">Save to disk</button>
+		</div>
+		<div id="gallery" class="gallery" aria-live="polite">
+			<div class="slot" data-index="0"><div class="placeholder">Add image 1</div></div>
+			<div class="slot" data-index="1"><div class="placeholder">Add image 2</div></div>
+			<div class="slot" data-index="2"><div class="placeholder">Add image 3</div></div>
+			<div class="slot" data-index="3"><div class="placeholder">Add image 4</div></div>
+			<div class="slot" data-index="4"><div class="placeholder">Add image 5</div></div>
+		</div>
+	</div>
+
+	<div class="fullscreen" id="fs">
+		<button class="close-btn" id="fs-close">✕</button>
+		<img id="fs-img" src="" alt="" />
+	</div>
+
+	<script>
+	// Attempt to load certificate list from img/list.json first, otherwise try likely filenames.
+	(async function(){
+		const gallery = document.getElementById('gallery');
+		const empty = document.getElementById('empty');
+		// single hidden file input used for all 5 slots
+		const fileInput = document.createElement('input');
+		fileInput.type = 'file';
+		fileInput.accept = 'image/*';
+		fileInput.style.display = 'none';
+		document.body.appendChild(fileInput);
+
+		const slots = Array.from(document.querySelectorAll('.slot'));
+		const fs = document.getElementById('fs');
+		const fsImg = document.getElementById('fs-img');
+		const fsClose = document.getElementById('fs-close');
+
+		function addThumb(src){
+			const div = document.createElement('div');
+			div.className='thumb';
+			const img = new Image();
+			img.src = src;
+			img.alt='Certificate';
+			img.onload = function(){ div.appendChild(img); gallery.appendChild(div); empty.style.display='none'; };
+			img.onerror = function(){ /* skip */ };
+			div.addEventListener('click', ()=>{ fsImg.src = src; fs.style.display='flex'; });
+		}
+
+		// Click a slot to choose an image for that slot
+		slots.forEach(slot => {
+			slot.addEventListener('click', ()=>{
+				const idx = slot.getAttribute('data-index');
+				fileInput.dataset.index = idx;
+				fileInput.click();
+			});
+		});
+
+
+		fileInput.addEventListener('change', function(e){
+			const f = e.target.files && e.target.files[0];
+			if(!f) return;
+			if(!f.type.startsWith('image/')) return;
+			const idx = parseInt(fileInput.dataset.index,10);
+			// read file and compress/save as data URL
+			const reader = new FileReader();
+			reader.onload = function(ev){
+				const img = new Image();
+				img.src = ev.target.result;
+				img.onload = function(){
+					// draw to canvas to limit size (max 1200px)
+					const max = 1200;
+					let w = img.width, h = img.height;
+					if(w>max || h>max){
+						const ratio = Math.min(max/w, max/h);
+						w = Math.round(w*ratio); h = Math.round(h*ratio);
+					}
+					const c = document.createElement('canvas'); c.width = w; c.height = h;
+					const ctx = c.getContext('2d'); ctx.drawImage(img,0,0,w,h);
+					const dataUrl = c.toDataURL('image/jpeg', 0.85);
+					// save to localStorage
+					try{ localStorage.setItem('cert-slot-'+idx, dataUrl); }catch(err){ console.warn('Storage failed',err); }
+					renderSlot(idx, dataUrl);
+				};
+			};
+			reader.readAsDataURL(f);
+		});
+
+		function renderSlot(idx, src){
+			const slot = slots[idx];
+			slot.innerHTML = '';
+			const img = new Image(); img.src = src; img.alt = 'Certificate '+(idx+1);
+			img.onload = function(){ img.style.maxWidth='100%'; img.style.maxHeight='100%'; slot.appendChild(img); slot.classList.add('has-image'); };
+			// add remove button
+			const btn = document.createElement('button'); btn.className='remove-btn'; btn.textContent='Remove';
+			btn.addEventListener('click', function(ev){ ev.stopPropagation(); localStorage.removeItem('cert-slot-'+idx); slot.innerHTML = '<div class="placeholder">Add image '+(idx+1)+'</div>'; slot.classList.remove('has-image'); });
+			slot.appendChild(btn);
+			// click to view fullscreen
+			slot.addEventListener('click', ()=>{ fsImg.src = src; fs.style.display='flex'; });
+		}
+
+		// restore saved slots
+		slots.forEach((slot, i)=>{
+			const key = 'cert-slot-'+i;
+			const data = localStorage.getItem(key);
+			if(data){ renderSlot(i, data); }
+		});
+
+		// Save to disk button posts images to a local server
+		const saveBtn = document.getElementById('save-disk');
+		saveBtn.addEventListener('click', async ()=>{
+			const form = new FormData();
+			let any = false;
+			for(let i=0;i<slots.length;i++){
+				const data = localStorage.getItem('cert-slot-'+i);
+				if(!data) continue;
+				any = true;
+				// convert dataURL to File
+				const res = await fetch(data);
+				const blob = await res.blob();
+				const filename = `cert-${i+1}.jpg`;
+				form.append('files', blob, filename);
+			}
+			if(!any){ alert('No images to save. Add images to slots first.'); return; }
+			try{
+				const resp = await fetch('http://localhost:3000/upload', { method:'POST', body: form });
+				if(!resp.ok) throw new Error(await resp.text());
+				const j = await resp.json();
+				alert('Saved to disk: ' + (j.saved || []).join(', '));
+			}catch(err){
+				alert('Save failed. Make sure the local server is running (node save_uploads_server.js).\n' + err);
+			}
+		});
+
+		// fullscreen close
+		fsClose.addEventListener('click', ()=>{ fs.style.display='none'; fsImg.src=''; });
+		fs.addEventListener('click', (e)=>{ if(e.target===fs) { fs.style.display='none'; fsImg.src=''; } });
+
+	})();
+	</script>
+</body>
+</html>
