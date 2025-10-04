@@ -48,15 +48,7 @@
 
     <nav class="nav" aria-label="Certificates list">
       <h3>Click a certificate to view</h3>
-      <div style="margin:8px 0;padding:8px;border-radius:6px;background:#fbfbfc;border:1px solid var(--line)">
-        <div style="font-size:13px;color:var(--muted);margin-bottom:6px">Filter by category</div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <label><input type="checkbox" data-cat="NPTEL"> NPTEL</label>
-          <label><input type="checkbox" data-cat="NET"> NET</label>
-          <label><input type="checkbox" data-cat="Internship"> Internship</label>
-          <label><input type="checkbox" data-cat="Seminar"> Seminar</label>
-        </div>
-      </div>
+      <!-- Filter UI removed as requested -->
       <div class="list" id="list">
         <!-- items injected by JS -->
       </div>
@@ -104,62 +96,7 @@
         listEl.appendChild(btn);
       });
 
-      // Category mapping: map category name -> array of certificate indices
-      const categories = {
-        'NPTEL': [2],
-        'NET': [0],
-        'Internship': [1],
-        'Seminar': [3]
-      };
-
-      // thumbnails for filtered view
-      const thumbsContainer = document.createElement('div');
-      thumbsContainer.className = 'filter-thumbs';
-      thumbsContainer.style.display = 'flex';
-      thumbsContainer.style.gap = '10px';
-      thumbsContainer.style.marginTop = '12px';
-      thumbsContainer.style.flexWrap = 'wrap';
-      document.querySelector('.viewer').appendChild(thumbsContainer);
-
-      // wire up category checkboxes
-      const catCheckboxes = Array.from(document.querySelectorAll('input[type=checkbox][data-cat]'));
-      catCheckboxes.forEach(cb => cb.addEventListener('change', onCategoryChange));
-
-      function onCategoryChange(){
-        const checked = catCheckboxes.filter(c=>c.checked).map(c=>c.dataset.cat);
-        if(checked.length===0){
-          // restore normal list selection behavior (keep current selection)
-          thumbsContainer.innerHTML = '';
-          const active = Array.from(listEl.children).findIndex(c=>c.classList.contains('active'));
-          showCert(active>=0?active:0);
-          return;
-        }
-        // collect indices
-        const indices = [];
-        checked.forEach(name=>{ const arr = categories[name]||[]; arr.forEach(i=>{ if(!indices.includes(i)) indices.push(i); }); });
-        // show first matched in main viewer
-        if(indices.length) showFiltered(indices);
-      }
-
-      function showFiltered(indices){
-        thumbsContainer.innerHTML = '';
-        // highlight none in left nav
-        Array.from(listEl.children).forEach(c=>c.classList.remove('active'));
-        // for each index create small thumb
-        indices.forEach(i=>{
-          const filename = names[i];
-          const src = 'img/'+filename;
-          const s = document.createElement('div');
-          s.style.width='120px'; s.style.height='80px'; s.style.border='1px solid var(--line)'; s.style.borderRadius='6px'; s.style.overflow='hidden'; s.style.display='flex'; s.style.alignItems='center'; s.style.justifyContent='center'; s.style.background='#fff'; s.style.cursor='pointer';
-          const img = new Image(); img.src=src; img.alt='thumb'; img.style.maxWidth='100%'; img.style.maxHeight='100%';
-          img.onload = ()=> s.appendChild(img);
-          img.onerror = ()=> s.innerHTML = `<div style="padding:6px;color:var(--muted)">Not found</div>`;
-          s.addEventListener('click', ()=> showCert(i));
-          thumbsContainer.appendChild(s);
-        });
-        // show first
-        showCert(indices[0]);
-      }
+      // Category filtering removed per user request
 
       // show certificate by index
       function showCert(i){
